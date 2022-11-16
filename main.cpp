@@ -8,6 +8,8 @@ using namespace std;
 
 
 bitset<48> subKey[16];
+bitset<64> key1;
+bitset<64> key2;
 
 int IP[] = {
     58, 50, 42, 34, 26, 18, 10, 2,
@@ -230,6 +232,7 @@ void generateKeys(bitset<64> check_key){
 
 
     bitset<64> encrypt(bitset<64>& text){
+        text = text ^ key2;
         bitset<64> cipher;
         bitset<64> currentBits;
         bitset<32> left;
@@ -260,12 +263,14 @@ void generateKeys(bitset<64> check_key){
         for (int i = 0; i < 64; ++i)
             cipher[63 - i] = currentBits[64 - IP_1[i]];
         // вернуть зашифрованный текст
+
+        cipher = cipher ^ key1;
         return cipher;
     }
 
     bitset<64> decrypt(bitset<64>& cipher)
 {
-
+    cipher = cipher ^ key2;
 	bitset<64> plain;
 	bitset<64> currentBits;
 	bitset<32> left;
@@ -296,15 +301,21 @@ void generateKeys(bitset<64> check_key){
 	for (int i = 0; i < 64; ++i)
 		plain[63 - i] = currentBits[64 - IP_1[i]];
 	// возврат в открытый текст
+        plain = plain ^ key1;
 	return plain;
 }
 
 int main(){
     string s = "program1";
 	string k = "12345678";
+    string k1 = "43253121";
+    string k2 = "86592342";
 	bitset<64> plain = charToBitset(s.c_str());
 	cout << plain << endl;
 	bitset<64> key = charToBitset(k.c_str());
+    bitset<64> key1 = charToBitset(k1.c_str());
+    bitset<64> key2 = charToBitset(k2.c_str());
+
 
 
 	// Генерируем 16 подключей
